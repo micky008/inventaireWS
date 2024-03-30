@@ -7,7 +7,7 @@ import org.hibernate.Session;
  *
  * @author Michael
  */
-public class AbstractDAO<T> {
+class AbstractDAO<T> {
 
     public synchronized T insert(T f) {
 

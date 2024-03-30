@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.List;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Cascade;
@@ -23,6 +24,9 @@ public class Boite {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String uuid;
     private String nom;
+
+    @OneToOne
+    private Lieu lieu;
 
     @Column(nullable = true)
     private String note;
@@ -61,6 +65,14 @@ public class Boite {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Lieu getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(Lieu lieu) {
+        this.lieu = lieu;
     }
 
 }

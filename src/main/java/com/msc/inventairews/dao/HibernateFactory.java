@@ -2,6 +2,7 @@ package com.msc.inventairews.dao;
 
 import com.msc.inventairews.Config;
 import com.msc.inventairews.entity.Boite;
+import com.msc.inventairews.entity.Lieu;
 import com.msc.inventairews.entity.Stuff;
 import com.msc.inventairews.entity.Tag;
 import org.hibernate.SessionFactory;
@@ -21,6 +22,7 @@ public class HibernateFactory {
                 .addAnnotatedClass(Boite.class)
                 .addAnnotatedClass(Stuff.class)
                 .addAnnotatedClass(Tag.class)
+                .addAnnotatedClass(Lieu.class)
                 .setProperty("connection.driver_class", Config.getInstance().getSqlDriver())
                 .setProperty("jakarta.persistence.jdbc.url", Config.getInstance().getJdbcURL())
                 .setProperty("connection.username", Config.getInstance().getUsername())
