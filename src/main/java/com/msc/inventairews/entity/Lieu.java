@@ -1,9 +1,9 @@
 package com.msc.inventairews.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import org.hibernate.annotations.GenericGenerator;
+import java.util.Objects;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  *
@@ -13,8 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class Lieu {
 
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @UuidGenerator
     private String uuid;
 
     private String lieu;
@@ -35,6 +34,26 @@ public class Lieu {
         this.uuid = uuid;
     }
 
-    
-    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.uuid);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Lieu other = (Lieu) obj;
+        return Objects.equals(this.uuid, other.uuid);
+    }
+
 }

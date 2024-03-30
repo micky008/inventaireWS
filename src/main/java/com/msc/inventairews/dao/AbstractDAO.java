@@ -58,9 +58,11 @@ class AbstractDAO<T> {
 
         Session session = HibernateFactory.getInstance().openSession();
         session.beginTransaction();
-
-        session.merge(m);
-
+        try {
+            session.merge(m);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         session.getTransaction().commit();
         session.close();
         return m;

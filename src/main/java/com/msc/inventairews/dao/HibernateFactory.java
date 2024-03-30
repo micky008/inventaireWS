@@ -33,7 +33,7 @@ public class HibernateFactory {
                 .setProperty("connection.useUnicode", "true")
                 .setProperty("cache.provider_class", "org.hibernate.cache.internal.NoCacheProvider")
                 .setProperty("show_sql", "false")
-                .setProperty("hibernate.hbm2ddl.auto", "update");
+                .setProperty("hibernate.hbm2ddl.auto", "create");
 
         try {
             sessionFactory = cfg.buildSessionFactory();

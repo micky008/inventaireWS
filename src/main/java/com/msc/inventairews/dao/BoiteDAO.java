@@ -13,4 +13,6 @@ public class BoiteDAO extends AbstractDAO<Boite> {
         return getObjects("from Boite");
     }
     
+    
+    
 }

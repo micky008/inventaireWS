@@ -1,7 +1,9 @@
 package com.msc.inventairews.controller;
 
-import com.msc.inventairews.dao.BoiteDAO;
+import com.msc.inventairews.dao.LieuDAO;
+import com.msc.inventairews.dao.LieuDAO;
 import com.msc.inventairews.entity.Boite;
+import com.msc.inventairews.entity.Lieu;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,32 +18,32 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Michael
  */
-@Path("boite")
+@Path("lieu")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class BoiteController {
+public class LieuController {
 
     @GET
-    public List<Boite> getAll() {
-        BoiteDAO bdao = new BoiteDAO();
-        return bdao.getAllBoites();
+    public List<Lieu> getAll() {
+        LieuDAO ldao = new LieuDAO();
+        return ldao.getAll();
     }
-
+    
     @PUT
-    public Boite insert(Boite b) {
-        BoiteDAO bdao = new BoiteDAO();
+    public Lieu insert(Lieu b) {
+        LieuDAO bdao = new LieuDAO();
         return bdao.insert(b);
     }
-
+    
     @POST
-    public Boite update(Boite b) {
-        BoiteDAO bdao = new BoiteDAO();
+    public Lieu update(Lieu b) {
+        LieuDAO bdao = new LieuDAO();
         return bdao.update(b);
     }
-
+    
     @DELETE
-    public Boite delete(Boite b) {
-        BoiteDAO bdao = new BoiteDAO();
+    public Lieu delete(Lieu b) {
+        LieuDAO bdao = new LieuDAO();
         return bdao.delete(b);
     }
 }
