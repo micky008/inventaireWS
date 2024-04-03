@@ -2,6 +2,7 @@ package com.msc.inventairews.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -11,6 +12,9 @@ import org.hibernate.annotations.UuidGenerator;
  */
 @Entity
 public class Lieu {
+
+    @Transient
+    public static final String ROOT_ID = "00000000-0000-0000-0000-000000000001";
 
     @Id
     @UuidGenerator

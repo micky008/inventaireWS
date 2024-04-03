@@ -1,15 +1,16 @@
 package com.msc.inventairews;
 
-import com.msc.inventairews.controller.BoiteController;
 import com.msc.inventairews.dao.BoiteDAO;
 import com.msc.inventairews.dao.HibernateFactory;
 import com.msc.inventairews.dao.LieuDAO;
+import com.msc.inventairews.dao.LieuInitDAO;
 import com.msc.inventairews.dao.StuffDAO;
 import com.msc.inventairews.dao.TagDAO;
 import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Lieu;
 import com.msc.inventairews.entity.Stuff;
 import com.msc.inventairews.entity.Tag;
+import com.msc.inventairews.providers.CORSFilter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +25,21 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class InventaireWS {
 
+    public void init() {
+        LieuInitDAO ld = new LieuInitDAO();
+        ld.init();
+        Lieu l2 = new Lieu();
+        l2.setLieu("Toto");
+        ld.insert(l2);
+    }
+
     public void test() {
-        LieuDAO ld = new LieuDAO();
         BoiteDAO bdao = new BoiteDAO();
         TagDAO tdao = new TagDAO();
         StuffDAO sdao = new StuffDAO();
+        LieuDAO ld = new LieuDAO();
 
-        Lieu l = new Lieu();
-        l.setLieu("A ranger");
-        l = ld.insert(l);
+        Lieu l = ld.getAll().get(1); //TOTO
 
         Tag tag1Boite1 = new Tag();
         Tag tag2Boite1 = new Tag();
@@ -82,10 +89,14 @@ public class InventaireWS {
     public static void main(String[] args) {
         Config.init();
         HibernateFactory.setUp();
-        new InventaireWS().test();
+        InventaireWS main = new InventaireWS();
+        main.init();
+        main.test();
 
-       // URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
-       // ResourceConfig config = new ResourceConfig(BoiteController.class);
-      //  HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, true);
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
+        ResourceConfig config = new ResourceConfig();
+        config.packages(true, "com.msc.inventairews.controller");        
+        config.register(CORSFilter.class);        
+        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, true);
     }
 }

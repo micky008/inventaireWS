@@ -2,7 +2,6 @@ package com.msc.inventairews.controller;
 
 import com.msc.inventairews.dao.TagDAO;
 import com.msc.inventairews.entity.Tag;
-import com.msc.inventairews.entity.Tag;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -17,7 +16,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Michael
  */
-@Path("tag")
+@Path("api/tag")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TagController {
