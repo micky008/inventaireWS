@@ -22,13 +22,13 @@ public class Boite {
 
     private String nom;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Lieu lieu;
 
     @Column(nullable = true)
     private String note;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Stuff> stuffs;
 
     public String getUuid() {

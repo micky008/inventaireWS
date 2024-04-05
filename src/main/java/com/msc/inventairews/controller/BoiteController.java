@@ -27,6 +27,13 @@ public class BoiteController {
         return bdao.getAllBoites();
     }
 
+    @GET
+    public List<Boite> getAllWithStuff() {
+        BoiteDAO bdao = new BoiteDAO();
+        bdao.getAllBoites();
+        return 
+    }
+
     @PUT
     public Boite insert(Boite b) {
         BoiteDAO bdao = new BoiteDAO();

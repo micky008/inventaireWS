@@ -34,13 +34,16 @@ public class LieuController {
     @PUT
     public Lieu insert(Lieu b) {
         LieuDAO bdao = new LieuDAO();
+        b.setUuid(null);
         return bdao.insert(b);
     }
 
     @POST
     public Lieu update(Lieu b) {
         LieuDAO bdao = new LieuDAO();
-        return bdao.update(b);
+        Lieu oldLieu = bdao.get(b.getUuid());
+        oldLieu.setLieu(b.getLieu());
+        return bdao.update(oldLieu);
     }
 
     @DELETE
