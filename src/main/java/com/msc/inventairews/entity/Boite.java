@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 import java.util.List;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -16,14 +17,17 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 public class Boite {
 
+    @Transient
+    public static final String ROOT_ID = "00000000-0000-0000-0000-000000000001";
+
     @Id
     @UuidGenerator
     private String uuid;
 
     private String nom;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Lieu lieu;
+    @ManyToOne(fetch = FetchType.EAGER)    
+    private Piece piece;
 
     @Column(nullable = true)
     private String note;
@@ -63,12 +67,12 @@ public class Boite {
         this.note = note;
     }
 
-    public Lieu getLieu() {
-        return lieu;
+    public Piece getPiece() {
+        return piece;
     }
 
-    public void setLieu(Lieu lieu) {
-        this.lieu = lieu;
+    public void setPiece(Piece piece) {
+        this.piece = piece;
     }
 
 }

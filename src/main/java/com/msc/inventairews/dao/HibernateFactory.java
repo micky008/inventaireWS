@@ -3,6 +3,7 @@ package com.msc.inventairews.dao;
 import com.msc.inventairews.Config;
 import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Lieu;
+import com.msc.inventairews.entity.Piece;
 import com.msc.inventairews.entity.Stuff;
 import com.msc.inventairews.entity.Tag;
 import org.hibernate.SessionFactory;
@@ -23,15 +24,17 @@ public class HibernateFactory {
                 .addAnnotatedClass(Stuff.class)
                 .addAnnotatedClass(Tag.class)
                 .addAnnotatedClass(Lieu.class)
+                .addAnnotatedClass(Piece.class)
                 .setProperty("connection.driver_class", Config.getInstance().getSqlDriver())
                 .setProperty("jakarta.persistence.jdbc.url", Config.getInstance().getJdbcURL())
-                .setProperty("connection.username", Config.getInstance().getUsername())
-                .setProperty("connection.password", Config.getInstance().getPassword())
+                .setProperty("hibernate.connection.username", Config.getInstance().getUsername())
+                .setProperty("hibernate.connection.password", Config.getInstance().getPassword())
                 .setProperty("hibernate.dialect", Config.getInstance().getDialect())
-                .setProperty("connection.CharSet", "utf8")
-                .setProperty("connection.characterEncoding", "utf8")
-                .setProperty("connection.useUnicode", "true")
-                .setProperty("cache.provider_class", "org.hibernate.cache.internal.NoCacheProvider")
+                .setProperty("hibernate.connection.autocommit", "false")
+                .setProperty("hibernate.connection.CharSet", "utf8")
+                .setProperty("hibernate.connection.characterEncoding", "utf8")
+                .setProperty("hibernate.connection.useUnicode", "true")
+                .setProperty("hibernate.cache.provider_class", "org.hibernate.cache.internal.NoCacheProvider")
                 .setProperty("show_sql", "false")
                 .setProperty("hibernate.hbm2ddl.auto", "create");
 

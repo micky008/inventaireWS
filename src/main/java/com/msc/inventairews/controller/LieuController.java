@@ -1,9 +1,9 @@
 package com.msc.inventairews.controller;
 
-import com.msc.inventairews.dao.BoiteDAO;
 import com.msc.inventairews.dao.LieuDAO;
-import com.msc.inventairews.entity.Boite;
+import com.msc.inventairews.dao.PieceDAO;
 import com.msc.inventairews.entity.Lieu;
+import com.msc.inventairews.entity.Piece;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -50,14 +50,14 @@ public class LieuController {
     @Path("{id}")
     public Lieu delete(@PathParam("id") String uuid) {
         LieuDAO ldao = new LieuDAO();
-        BoiteDAO bdao = new BoiteDAO();
+        PieceDAO pdao = new PieceDAO();
         Lieu root = ldao.get(Lieu.ROOT_ID);
         Lieu old = ldao.get(uuid);
-        List<Boite> boites = bdao.getAllBoitesbyLieu(old);
-        for (Boite boite : boites) {
-            boite.setLieu(root);
+        List<Piece> pieces = pdao.getAll(false);
+        for (Piece p : pieces) {
+            p.setLieu(root);
         }
-        bdao.update(boites);
+        pdao.update(pieces);
         return ldao.delete(old);
 
     }

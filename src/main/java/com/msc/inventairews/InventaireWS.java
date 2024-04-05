@@ -3,11 +3,13 @@ package com.msc.inventairews;
 import com.msc.inventairews.dao.BoiteDAO;
 import com.msc.inventairews.dao.HibernateFactory;
 import com.msc.inventairews.dao.LieuDAO;
-import com.msc.inventairews.dao.LieuInitDAO;
+import com.msc.inventairews.dao.UUIDInitDAO;
+import com.msc.inventairews.dao.PieceDAO;
 import com.msc.inventairews.dao.StuffDAO;
 import com.msc.inventairews.dao.TagDAO;
 import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Lieu;
+import com.msc.inventairews.entity.Piece;
 import com.msc.inventairews.entity.Stuff;
 import com.msc.inventairews.entity.Tag;
 import com.msc.inventairews.providers.CORSFilter;
@@ -26,20 +28,42 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class InventaireWS {
 
     public void init() {
-        LieuInitDAO ld = new LieuInitDAO();
-        ld.init();
+        UUIDInitDAO uuidinit = new UUIDInitDAO();
+        uuidinit.init();
+        LieuDAO ldao = new LieuDAO();
+        PieceDAO pdao = new PieceDAO();
+        BoiteDAO bdao = new BoiteDAO();
+        
+        Lieu l1 = ldao.get(Lieu.ROOT_ID);
+        Piece p1 = pdao.get(Piece.ROOT_ID);
+        p1.setLieu(l1);
+        p1 = pdao.update(p1);
+        Boite b1 = bdao.get(Boite.ROOT_ID);
+        b1.setPiece(p1);
+        b1 = bdao.update(b1);
+        
         Lieu l2 = new Lieu();
-        l2.setLieu("Toto");
-        ld.insert(l2);
+        l2.setLieu("Residence Principal");
+        l2 = ldao.insert(l2);        
+        Piece p = new Piece();
+        p.setLieu(l2);
+        p.setNom("Grenier");
+        p.setUuid(null);
+        p = pdao.insert(p);
+        Boite b = new Boite();
+        b.setNom("Ma 1ere boite");
+        b.setPiece(p);
+        b.setUuid(null);
+        bdao.insert(b);
     }
 
     public void test() {
         BoiteDAO bdao = new BoiteDAO();
         TagDAO tdao = new TagDAO();
         StuffDAO sdao = new StuffDAO();
-        LieuDAO ld = new LieuDAO();
-
-        Lieu l = ld.getAll().get(1); //TOTO
+        PieceDAO ld = new PieceDAO();
+        
+        Piece piece = ld.getAll(false).get(1); //Residence principal
 
         Tag tag1Boite1 = new Tag();
         Tag tag2Boite1 = new Tag();
@@ -61,11 +85,9 @@ public class InventaireWS {
         List<Stuff> listStuff = new ArrayList<>(1);
         listStuff.add(stuff1);
 
-        Boite boite1 = new Boite();
-        boite1.setLieu(l);
-        boite1.setNom("boite 1");
+        Boite boite1 = bdao.getAllBoitesByPiece(piece).get(0);
         boite1.setStuffs(listStuff);
-        boite1 = bdao.insert(boite1);
+        boite1 = bdao.update(boite1);
 
         ///////////////////////
         Tag tag3Boite1 = new Tag();
@@ -93,10 +115,10 @@ public class InventaireWS {
         main.init();
         main.test();
 
-        URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(Config.getInstance().getPort()).build();
         ResourceConfig config = new ResourceConfig();
-        config.packages(true, "com.msc.inventairews.controller");        
-        config.register(CORSFilter.class);        
+        config.packages(true, "com.msc.inventairews.controller");
+        config.register(CORSFilter.class);
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, true);
     }
 }

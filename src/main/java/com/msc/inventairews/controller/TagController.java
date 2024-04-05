@@ -26,19 +26,19 @@ public class TagController {
         TagDAO ldao = new TagDAO();
         return ldao.getAll();
     }
-    
+
     @PUT
     public Tag insert(Tag b) {
         TagDAO bdao = new TagDAO();
         return bdao.insert(b);
     }
-    
+
     @POST
     public Tag update(Tag b) {
         TagDAO bdao = new TagDAO();
         return bdao.update(b);
     }
-    
+
     @DELETE
     public Tag delete(Tag b) {
         TagDAO bdao = new TagDAO();
