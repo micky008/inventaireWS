@@ -31,7 +31,7 @@ public class BoiteController {
     public List<Boite> getAllWithStuff() {
         BoiteDAO bdao = new BoiteDAO();
         bdao.getAllBoites();
-        return 
+        return null;
     }
 
     @PUT
