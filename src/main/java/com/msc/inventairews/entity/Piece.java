@@ -24,7 +24,7 @@ public class Piece {
 
     private String nom;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Lieu lieu;
 
     public String getUuid() {
@@ -51,6 +51,13 @@ public class Piece {
         this.lieu = lieu;
     }
 
+    public Piece(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Piece() {
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;

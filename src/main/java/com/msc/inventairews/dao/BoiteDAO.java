@@ -18,12 +18,17 @@ public class BoiteDAO extends AbstractDAO<Boite> {
         return getObjects("from Boite");
     }
 
-    public List<Boite> getAllBoitesWithStuff(String uuidPiece) {
-        return getObjects("from Boite JOIN FETCH stuffs where piece.uuid='" + uuidPiece + "'");
+    public List<Boite> getAllBoitesWithStuff(Piece piece) {
+        return getObjects("from Boite JOIN FETCH stuffs where piece.uuid='" + piece.getUuid() + "'");
     }
 
     public List<Boite> getAllBoitesByPiece(Piece piece) {
-        return getObjects("from Boite where piece.uuid='" + piece.getUuid() + "'");
+        List<Boite> lb = getObjects("from Boite where piece.uuid='" + piece.getUuid() + "'");
+        for (Boite b : lb) {
+            b.setStuffs(null);
+            b.getPiece().setLieu(null);
+        }
+        return lb;
     }
 
 }

@@ -33,18 +33,18 @@ public class InventaireWS {
         LieuDAO ldao = new LieuDAO();
         PieceDAO pdao = new PieceDAO();
         BoiteDAO bdao = new BoiteDAO();
-        
+
         Lieu l1 = ldao.get(Lieu.ROOT_ID);
         Piece p1 = pdao.get(Piece.ROOT_ID);
         p1.setLieu(l1);
         p1 = pdao.update(p1);
         Boite b1 = bdao.get(Boite.ROOT_ID);
         b1.setPiece(p1);
-        b1 = bdao.update(b1);
-        
+        bdao.update(b1);
+
         Lieu l2 = new Lieu();
         l2.setLieu("Residence Principal");
-        l2 = ldao.insert(l2);        
+        l2 = ldao.insert(l2);
         Piece p = new Piece();
         p.setLieu(l2);
         p.setNom("Grenier");
@@ -62,8 +62,8 @@ public class InventaireWS {
         TagDAO tdao = new TagDAO();
         StuffDAO sdao = new StuffDAO();
         PieceDAO ld = new PieceDAO();
-        
-        Piece piece = ld.getAll(false).get(1); //Residence principal
+
+        Piece piece = ld.getAll().get(1); //Residence principal
 
         Tag tag1Boite1 = new Tag();
         Tag tag2Boite1 = new Tag();

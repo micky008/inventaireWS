@@ -53,7 +53,7 @@ public class LieuController {
         PieceDAO pdao = new PieceDAO();
         Lieu root = ldao.get(Lieu.ROOT_ID);
         Lieu old = ldao.get(uuid);
-        List<Piece> pieces = pdao.getAll(false);
+        List<Piece> pieces = pdao.getAll();
         for (Piece p : pieces) {
             p.setLieu(root);
         }

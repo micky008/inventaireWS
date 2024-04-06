@@ -12,14 +12,8 @@ import org.hibernate.Session;
  */
 public class PieceDAO extends AbstractDAO<Piece> {
 
-    public List<Piece> getAll(boolean initializeLieu) {
-        List<Piece> pieces = this.getObjects("from Piece");
-        if (initializeLieu) {
-            for (Piece p : pieces) {
-                Hibernate.initialize(p);
-            }
-        }
-        return pieces;
+    public List<Piece> getAll() {
+        return this.getObjects("from Piece");
     }
 
     public Piece get(String uuid) {
@@ -27,11 +21,7 @@ public class PieceDAO extends AbstractDAO<Piece> {
     }
 
     public List<Piece> getByLieu(Lieu l) {
-        List<Piece> lp = this.getObjects("from Piece where lieu.uuid='" + l.getUuid() + "'");
-        for (Piece p : lp) {
-            p.setLieu(null);
-        }
-        return lp;
+        return this.getObjects("from Piece where lieu.uuid='" + l.getUuid() + "'");
     }
 
     public synchronized Piece deletebyUUID(String uuid) {

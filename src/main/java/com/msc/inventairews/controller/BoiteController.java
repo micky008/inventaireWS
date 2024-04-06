@@ -1,7 +1,9 @@
 package com.msc.inventairews.controller;
 
 import com.msc.inventairews.dao.BoiteDAO;
+import com.msc.inventairews.dao.PieceDAO;
 import com.msc.inventairews.entity.Boite;
+import com.msc.inventairews.entity.Piece;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -29,10 +31,17 @@ public class BoiteController {
     }
 
     @GET
-    @Path("{uuidPiece}")
-    public List<Boite> getAllWithStuff(@PathParam("uuidPiece") String uuidpiece) {
+    @Path("{uuidPiece}/stuff")
+    public List<Boite> getAllByPieceWithStuff(@PathParam("uuidPiece") String uuidpiece) {
         BoiteDAO bdao = new BoiteDAO();
-        return bdao.getAllBoitesWithStuff(uuidpiece);
+        return bdao.getAllBoitesWithStuff(new Piece(uuidpiece));
+    }
+
+    @GET
+    @Path("{uuidPiece}")
+    public List<Boite> getAllByPiece(@PathParam("uuidPiece") String uuidpiece) {
+        BoiteDAO bdao = new BoiteDAO();        
+        return bdao.getAllBoitesByPiece(new Piece(uuidpiece));
     }
 
     @PUT
@@ -44,6 +53,13 @@ public class BoiteController {
     @POST
     public Boite update(Boite b) {
         BoiteDAO bdao = new BoiteDAO();
+        PieceDAO pdao = new PieceDAO();
+        
+        Boite oldBoite = bdao.get(b.getUuid());
+        Piece newPiece = pdao.get(b.getPiece().getUuid());        
+        
+        oldBoite.setPiece(newPiece);                
+        
         return bdao.update(b);
     }
 

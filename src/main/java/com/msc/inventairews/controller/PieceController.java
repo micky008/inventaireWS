@@ -29,11 +29,7 @@ public class PieceController {
     @GET
     public List<Piece> getAll() {
         PieceDAO ldao = new PieceDAO();
-        List<Piece> lp = ldao.getAll(false);
-        for (Piece p : lp) {
-            p.setLieu(null);
-        }
-        return lp;
+        return ldao.getAll();
     }
 
     @GET
@@ -43,14 +39,6 @@ public class PieceController {
         LieuDAO ldao = new LieuDAO();
         Lieu l = ldao.get(uuidLieu);
         return pdao.getByLieu(l);
-    }
-
-    @GET
-    @Path("piece")
-    public List<Piece> getAllWithPiece() {
-        PieceDAO ldao = new PieceDAO();
-        List<Piece> lp = ldao.getAll(true);
-        return lp;
     }
 
     @PUT
@@ -75,13 +63,13 @@ public class PieceController {
     }
 
     @DELETE
-    @Path("{id}")
-    public Piece delete(@PathParam("id") String uuid) {
+    @Path("{uuidPiece}")
+    public Piece delete(@PathParam("uuidPiece") String uuidPiece) {
         PieceDAO pdao = new PieceDAO();
         BoiteDAO bdao = new BoiteDAO();
 
         Piece root = pdao.get(Piece.ROOT_ID);
-        Piece oldPiece = pdao.get(uuid);
+        Piece oldPiece = pdao.get(uuidPiece);
 
         List<Boite> lboite = bdao.getAllBoitesByPiece(oldPiece);
         for (Boite b : lboite) {
