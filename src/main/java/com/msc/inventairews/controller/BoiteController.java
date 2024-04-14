@@ -40,26 +40,46 @@ public class BoiteController {
     @GET
     @Path("{uuidPiece}")
     public List<Boite> getAllByPiece(@PathParam("uuidPiece") String uuidpiece) {
-        BoiteDAO bdao = new BoiteDAO();        
+        BoiteDAO bdao = new BoiteDAO();
         return bdao.getAllBoitesByPiece(new Piece(uuidpiece));
     }
 
     @PUT
-    public Boite insert(Boite b) {
+    @Path("{uuidPiece}")
+    public Boite insertRootBoite(@PathParam("uuidPiece") String uuidPiece, Boite newB) {
         BoiteDAO bdao = new BoiteDAO();
-        return bdao.insert(b);
+        PieceDAO pdao = new PieceDAO();
+        Piece piece = pdao.get(uuidPiece);
+        newB.setUuid(null);
+        newB.setPiece(piece);
+        return bdao.insert(newB);
     }
+
+    @PUT
+    @Path("{uuidBoiteParent}/child")
+    public Boite insertChild(@PathParam("uuidBoiteParent") String uuidBoiteParent, Boite newB) {
+        BoiteDAO bdao = new BoiteDAO();
+        Boite boiteParent = bdao.get(uuidBoiteParent);
+        newB.setUuid(null);
+        newB.setRootBoite(false);
+        newB.setPiece(boiteParent.getPiece());
+        newB = bdao.insert(newB);
+        boiteParent.getBoites().add(newB);
+        bdao.update(boiteParent);
+        return newB;
+    }
+
 
     @POST
     public Boite update(Boite b) {
         BoiteDAO bdao = new BoiteDAO();
         PieceDAO pdao = new PieceDAO();
-        
+
         Boite oldBoite = bdao.get(b.getUuid());
-        Piece newPiece = pdao.get(b.getPiece().getUuid());        
-        
-        oldBoite.setPiece(newPiece);                
-        
+        Piece newPiece = pdao.get(b.getPiece().getUuid());
+
+        oldBoite.setPiece(newPiece);
+
         return bdao.update(b);
     }
 

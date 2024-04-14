@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import java.util.List;
 import org.hibernate.annotations.UuidGenerator;
@@ -35,6 +36,11 @@ public class Boite {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Stuff> stuffs;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Boite> boites;
+    
+    private boolean rootBoite = true;
+    
     public String getUuid() {
         return uuid;
     }
@@ -75,4 +81,19 @@ public class Boite {
         this.piece = piece;
     }
 
+    public List<Boite> getBoites() {
+        return boites;
+    }
+
+    public void setBoites(List<Boite> boites) {
+        this.boites = boites;
+    }
+
+    public boolean isRootBoite() {
+        return rootBoite;
+    }
+
+    public void setRootBoite(boolean rootBoite) {
+        this.rootBoite = rootBoite;
+    }
 }

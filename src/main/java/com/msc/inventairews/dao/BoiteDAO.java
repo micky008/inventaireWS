@@ -15,7 +15,7 @@ public class BoiteDAO extends AbstractDAO<Boite> {
     }
 
     public List<Boite> getAllBoites() {
-        return getObjects("from Boite");
+        return getObjects("from Boite where rootBoite=true");
     }
 
     public List<Boite> getAllBoitesWithStuff(Piece piece) {
@@ -23,12 +23,23 @@ public class BoiteDAO extends AbstractDAO<Boite> {
     }
 
     public List<Boite> getAllBoitesByPiece(Piece piece) {
-        List<Boite> lb = getObjects("from Boite where piece.uuid='" + piece.getUuid() + "'");
+        List<Boite> lb = getObjects("from Boite where piece.uuid='" + piece.getUuid() + "' and rootBoite=true");
         for (Boite b : lb) {
-            b.setStuffs(null);
-            b.getPiece().setLieu(null);
+            clean(b);
         }
         return lb;
+    }
+
+    private void clean(Boite b) {
+        b.setStuffs(null);
+        b.getPiece().setLieu(null);
+        if (b.getBoites() != null && !b.getBoites().isEmpty()) {
+            for (Boite inBoite : b.getBoites()) {
+                clean(inBoite);
+            }
+        } else {
+            b.setBoites(null);
+        }
     }
 
 }

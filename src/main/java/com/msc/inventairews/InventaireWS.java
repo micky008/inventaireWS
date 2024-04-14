@@ -61,50 +61,104 @@ public class InventaireWS {
         BoiteDAO bdao = new BoiteDAO();
         TagDAO tdao = new TagDAO();
         StuffDAO sdao = new StuffDAO();
-        PieceDAO ld = new PieceDAO();
+        PieceDAO pdao = new PieceDAO();
 
-        Piece piece = ld.getAll().get(1); //Residence principal
+        Piece grenier = pdao.getAll().get(1); //grenier de Residence principal
 
-        Tag tag1Boite1 = new Tag();
-        Tag tag2Boite1 = new Tag();
-        tag1Boite1.setTag("tournevis");
-        tag2Boite1.setTag("crusi");
-        tag1Boite1 = tdao.insert(tag1Boite1);
-        tag2Boite1 = tdao.insert(tag2Boite1);
-        List<Tag> tags1 = new ArrayList<>(2);
-        List<Tag> tags2 = new ArrayList<>(2);
-        tags1.add(tag2Boite1);
-        tags1.add(tag1Boite1);
+        /////////INIT TAG///////////
+        Tag tagTournevis = new Tag();
+        Tag tagCrusi = new Tag();
+        Tag tagPlat = new Tag();
+        Tag tagPrecision = new Tag();
+        Tag tagPerceuse = new Tag();
 
-        Stuff stuff1 = new Stuff();
-        stuff1.setQuantite(1);
-        stuff1.setDesrc("tournevis crusi");
-        stuff1.setTags(tags1);
-        stuff1 = sdao.insert(stuff1);
+        tagPrecision.setTag("Precision");
+        tagTournevis.setTag("tournevis");
+        tagCrusi.setTag("crusi");
+        tagPlat.setTag("plat");
+        tagPerceuse.setTag("perceuse");
 
-        List<Stuff> listStuff = new ArrayList<>(1);
-        listStuff.add(stuff1);
+        tagTournevis = tdao.insert(tagTournevis);
+        tagCrusi = tdao.insert(tagCrusi);
+        tagPlat = tdao.insert(tagPlat);
+        tagPrecision = tdao.insert(tagPrecision);
+        tagPerceuse = tdao.insert(tagPerceuse);
 
-        Boite boite1 = bdao.getAllBoitesByPiece(piece).get(0);
-        boite1.setStuffs(listStuff);
-        boite1 = bdao.update(boite1);
+        List<Tag> tagsTournevisCrucis = new ArrayList<>(2);
+        List<Tag> tagsTournevisPlat = new ArrayList<>(2);
+        List<Tag> tagsTournevisCrusiPresison = new ArrayList<>(3);
+        List<Tag> tagsPerceuse = new ArrayList<>(1);
 
-        ///////////////////////
-        Tag tag3Boite1 = new Tag();
-        tag3Boite1.setTag("plat");
-        tag3Boite1 = tdao.insert(tag3Boite1);
-        tags2.add(tag3Boite1);
-        tags2.add(tag1Boite1);
+        tagsTournevisCrucis.add(tagTournevis);
+        tagsTournevisCrucis.add(tagCrusi);
 
-        Stuff stuff2 = new Stuff();
-        stuff2.setQuantite(1);
-        stuff2.setDesrc("tournevis plat");
-        stuff2.setTags(tags2);
-        stuff2 = sdao.insert(stuff2);
+        tagsTournevisPlat.add(tagTournevis);
+        tagsTournevisPlat.add(tagPlat);
 
-        boite1.getStuffs().add(stuff2);
+        tagsTournevisCrusiPresison.add(tagTournevis);
+        tagsTournevisCrusiPresison.add(tagCrusi);
+        tagsTournevisCrusiPresison.add(tagPrecision);
 
+        tagsPerceuse.add(tagPerceuse);
+
+        ///////////////Init tournevis plat, crusi, precision 
+        Stuff stuffTournevisCrusi = new Stuff();
+        stuffTournevisCrusi.setQuantite(1);
+        stuffTournevisCrusi.setDesrc("tournevis crusi");
+        stuffTournevisCrusi.setTags(tagsTournevisCrucis);
+        stuffTournevisCrusi = sdao.insert(stuffTournevisCrusi);
+
+        Stuff stuffTournevisPlat = new Stuff();
+        stuffTournevisPlat.setQuantite(1);
+        stuffTournevisPlat.setDesrc("tournevis plat");
+        stuffTournevisPlat.setTags(tagsTournevisPlat);
+        stuffTournevisPlat = sdao.insert(stuffTournevisPlat);
+
+        Stuff stuffTournevisCrusiPrecision = new Stuff();
+        stuffTournevisCrusiPrecision.setQuantite(1);
+        stuffTournevisCrusiPrecision.setDesrc("tournevis crusi precision");
+        stuffTournevisCrusiPrecision.setTags(tagsTournevisCrusiPresison);
+        stuffTournevisCrusiPrecision = sdao.insert(stuffTournevisCrusiPrecision);
+
+        Stuff perceuse = new Stuff();
+        perceuse.setQuantite(1);
+        perceuse.setDesrc("perceuse");
+        perceuse.setTags(tagsPerceuse);
+        perceuse = sdao.insert(perceuse);
+
+        List<Stuff> listStuffBoite1 = new ArrayList<>(2);
+        List<Stuff> listStuffBoite2Perceuse = new ArrayList<>(1);
+        List<Stuff> listStuffBoiteinBoite = new ArrayList<>(1);
+
+        listStuffBoite1.add(stuffTournevisCrusi);
+        listStuffBoite1.add(stuffTournevisPlat);
+        listStuffBoiteinBoite.add(stuffTournevisCrusiPrecision);
+        listStuffBoite2Perceuse.add(perceuse);
+
+        ///////////Boite dans une boite//////////////
+        Boite boite1 = bdao.getAllBoitesByPiece(grenier).get(0);
+        boite1.setStuffs(listStuffBoite1);
+        boite1.setPiece(grenier);
+        boite1.setNom("grande boite");
+
+        Boite inBoite = new Boite();
+        inBoite.setStuffs(listStuffBoiteinBoite);
+        inBoite.setNom("petite boite");
+        inBoite.setPiece(boite1.getPiece());
+        inBoite.setRootBoite(false);
+        inBoite = bdao.insert(inBoite);
+        List<Boite> lInBoite = new ArrayList<>(1);
+        lInBoite.add(inBoite);
+
+        boite1.setBoites(lInBoite);
         bdao.update(boite1);
+
+        ///////////////////////BOITE 2
+        Boite boite2 = new Boite();
+        boite2.setStuffs(listStuffBoite2Perceuse);
+        boite2.setNom("Boite a outils");
+        boite2.setPiece(grenier);
+        bdao.insert(boite2);
 
     }
 

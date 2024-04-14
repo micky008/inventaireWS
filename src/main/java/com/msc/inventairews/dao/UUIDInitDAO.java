@@ -19,7 +19,7 @@ public class UUIDInitDAO extends LieuDAO {
         q.executeUpdate();
         q = s.createNativeQuery("INSERT INTO Piece (uuid, nom) values ('" + Piece.ROOT_ID + "','Piece inconnue')", Integer.class);
         q.executeUpdate();
-        q = s.createNativeQuery("INSERT INTO Boite (uuid, nom) values ('" + Boite.ROOT_ID + "','Boite inconnue')", Integer.class);
+        q = s.createNativeQuery("INSERT INTO Boite (uuid, nom, rootBoite) values ('" + Boite.ROOT_ID + "','Boite inconnue', 1)", Integer.class);
         q.executeUpdate();
         s.getTransaction().commit();
         s.close();
