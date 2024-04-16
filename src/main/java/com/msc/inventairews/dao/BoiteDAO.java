@@ -42,4 +42,21 @@ public class BoiteDAO extends AbstractDAO<Boite> {
         }
     }
 
+    public Boite delete(Boite b) {
+        deepDelete(b);
+        b = super.delete(b);
+        return b;
+    }
+
+    private void deepDelete(Boite boite) {
+        if (boite.getBoites() == null || boite.getBoites().isEmpty()) {
+            super.delete(boite);
+            return;
+        }
+        for (Boite b : boite.getBoites()) {            
+            deepDelete(b);
+        }
+        super.delete(boite);
+    }
+
 }

@@ -141,9 +141,8 @@ public class InventaireWS {
         boite1.setPiece(grenier);
         boite1.setNom("grande boite");
 
-        Boite inBoite = new Boite();
+        Boite inBoite = new Boite("petite boite");
         inBoite.setStuffs(listStuffBoiteinBoite);
-        inBoite.setNom("petite boite");
         inBoite.setPiece(boite1.getPiece());
         inBoite.setRootBoite(false);
         inBoite = bdao.insert(inBoite);
@@ -154,11 +153,54 @@ public class InventaireWS {
         bdao.update(boite1);
 
         ///////////////////////BOITE 2
-        Boite boite2 = new Boite();
+        Boite boite2 = new Boite("Boite a outils");
         boite2.setStuffs(listStuffBoite2Perceuse);
-        boite2.setNom("Boite a outils");
         boite2.setPiece(grenier);
         bdao.insert(boite2);
+
+    }
+
+    public void test2() {
+        PieceDAO pdao = new PieceDAO();
+        Piece grenier = pdao.getAll().get(1); //grenier de Residence principal
+        BoiteDAO bdao = new BoiteDAO();
+
+        Boite plop = new Boite("plop");
+        Boite q = new Boite("q");
+        Boite w = new Boite("w");
+        Boite a = new Boite("a");
+        Boite s = new Boite("s");
+        Boite d = new Boite("d");
+        q.setRootBoite(false);
+        w.setRootBoite(false);
+        a.setRootBoite(false);
+        s.setRootBoite(false);
+        d.setRootBoite(false);
+        plop.setPiece(grenier);
+        q.setPiece(grenier);
+        w.setPiece(grenier);
+        a.setPiece(grenier);
+        s.setPiece(grenier);
+        d.setPiece(grenier);
+
+        plop = bdao.insert(plop);
+        d = bdao.insert(d);
+        s = bdao.insert(s);
+        a = bdao.insert(a);
+        w = bdao.insert(w);
+
+        plop.setBoites(new ArrayList<>(2));
+        q.setBoites(new ArrayList<>(3));
+        q.getBoites().add(a);
+        q.getBoites().add(s);
+        q.getBoites().add(d);
+
+        q = bdao.insert(q);
+
+        plop.getBoites().add(q);
+        plop.getBoites().add(w);
+
+        bdao.update(plop);
 
     }
 
@@ -168,6 +210,7 @@ public class InventaireWS {
         InventaireWS main = new InventaireWS();
         main.init();
         main.test();
+        main.test2();
 
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(Config.getInstance().getPort()).build();
         ResourceConfig config = new ResourceConfig();

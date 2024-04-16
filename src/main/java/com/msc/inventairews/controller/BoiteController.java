@@ -69,7 +69,6 @@ public class BoiteController {
         return newB;
     }
 
-
     @POST
     public Boite update(Boite b) {
         BoiteDAO bdao = new BoiteDAO();
@@ -84,8 +83,15 @@ public class BoiteController {
     }
 
     @DELETE
-    public Boite delete(Boite b) {
+    @Path("{uuidBoite}")
+    public Boite delete(@PathParam("uuidBoite") String uuid) {
         BoiteDAO bdao = new BoiteDAO();
-        return bdao.delete(b);
+        Boite toDelete = bdao.get(uuid);
+        try {
+            return bdao.delete(toDelete);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Boite();
     }
 }

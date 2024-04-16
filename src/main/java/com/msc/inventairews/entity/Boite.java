@@ -40,6 +40,12 @@ public class Boite {
     private List<Boite> boites;
     
     private boolean rootBoite = true;
+
+    public Boite(String nom) {
+        this.nom = nom;
+    }
+    
+    public Boite(){}
     
     public String getUuid() {
         return uuid;
