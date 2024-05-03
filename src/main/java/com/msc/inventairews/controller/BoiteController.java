@@ -4,6 +4,7 @@ import com.msc.inventairews.dao.BoiteDAO;
 import com.msc.inventairews.dao.PieceDAO;
 import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Piece;
+import java.util.Iterator;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -24,30 +25,34 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class BoiteController {
 
+    BoiteDAO bdao = new BoiteDAO();
+
     @GET
-    public List<Boite> getAll() {
-        BoiteDAO bdao = new BoiteDAO();
-        return bdao.getAllBoites();
+    public List<Boite> getAllRootBoites() {
+        return bdao.getAllRootBoites();
+    }
+
+    @GET
+    @Path("{uuidPiece}/noRoot")
+    public List<Boite> getAllBoitesByPiece(@PathParam("uuidPiece") String uuidpiece) {
+        return bdao.getAllBoitesByPiece(new Piece(uuidpiece));
     }
 
     @GET
     @Path("{uuidPiece}/stuff")
-    public List<Boite> getAllByPieceWithStuff(@PathParam("uuidPiece") String uuidpiece) {
-        BoiteDAO bdao = new BoiteDAO();
+    public List<Boite> getAllBoiteByPieceWithStuff(@PathParam("uuidPiece") String uuidpiece) {
         return bdao.getAllBoitesWithStuff(new Piece(uuidpiece));
     }
 
     @GET
     @Path("{uuidPiece}")
-    public List<Boite> getAllByPiece(@PathParam("uuidPiece") String uuidpiece) {
-        BoiteDAO bdao = new BoiteDAO();
-        return bdao.getAllBoitesByPiece(new Piece(uuidpiece));
+    public List<Boite> getAllRootBoiteByPiece(@PathParam("uuidPiece") String uuidpiece) {
+        return bdao.getAllRootBoitesByPiece(new Piece(uuidpiece));
     }
 
     @PUT
     @Path("{uuidPiece}")
     public Boite insertRootBoite(@PathParam("uuidPiece") String uuidPiece, Boite newB) {
-        BoiteDAO bdao = new BoiteDAO();
         PieceDAO pdao = new PieceDAO();
         Piece piece = pdao.get(uuidPiece);
         newB.setUuid(null);
@@ -58,7 +63,6 @@ public class BoiteController {
     @PUT
     @Path("{uuidBoiteParent}/child")
     public Boite insertChild(@PathParam("uuidBoiteParent") String uuidBoiteParent, Boite newB) {
-        BoiteDAO bdao = new BoiteDAO();
         Boite boiteParent = bdao.get(uuidBoiteParent);
         newB.setUuid(null);
         newB.setRootBoite(false);
@@ -70,22 +74,51 @@ public class BoiteController {
     }
 
     @POST
-    public Boite update(Boite b) {
-        BoiteDAO bdao = new BoiteDAO();
+    public Boite updatePiece(Boite b) {
         PieceDAO pdao = new PieceDAO();
 
         Boite oldBoite = bdao.get(b.getUuid());
         Piece newPiece = pdao.get(b.getPiece().getUuid());
 
+        oldBoite.setNote(b.getNote());
         oldBoite.setPiece(newPiece);
 
-        return bdao.update(b);
+        return bdao.update(oldBoite);
+    }
+
+    @POST
+    @Path("{newRootBoiteUuid}")
+    public Boolean moveBoiteParent(@PathParam("newRootBoiteUuid") String uuid, Boite bFromUser) {
+        try {
+            Boite oldBoite = bdao.get(bFromUser.getUuid());
+            Boite newRootBoite = bdao.get(uuid);
+            oldBoite.setPiece(newRootBoite.getPiece());
+            oldBoite.setRootBoite(false);
+            bdao.update(oldBoite);
+            Boite parentBoite = bdao.getParent(oldBoite);
+            if (parentBoite != null) {
+                Iterator<Boite> itb = parentBoite.getBoites().iterator();
+                while (itb.hasNext()) {
+                    Boite b = itb.next();
+                    if (b.getUuid().equals(oldBoite.getUuid())) {
+                        itb.remove();
+                        break;
+                    }
+                }
+                bdao.update(parentBoite);
+            }
+            newRootBoite.getBoites().add(oldBoite);
+            bdao.update(newRootBoite);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @DELETE
     @Path("{uuidBoite}")
     public Boite delete(@PathParam("uuidBoite") String uuid) {
-        BoiteDAO bdao = new BoiteDAO();
         Boite toDelete = bdao.get(uuid);
         try {
             return bdao.delete(toDelete);

@@ -1,9 +1,7 @@
 package com.msc.inventairews.dao;
 
+import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Stuff;
-import com.msc.inventairews.entity.Tag;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,6 +12,18 @@ public class StuffDAO extends AbstractDAO<Stuff> {
 
     public List<Stuff> getAll() {
         return this.getObjects("from Stuff");
+    }
+    
+    public List<Stuff> getStuffByBoite(Boite boite) {
+        String sql = "select stuff from Stuff as stuff, Boite as boite where boite.uuid='%1'";
+        sql = sql.replace("%1", boite.getUuid());
+        try{
+        List<Stuff> ls = this.getObjects(sql);
+       return ls;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 //    @Override

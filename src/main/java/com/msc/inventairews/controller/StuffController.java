@@ -1,6 +1,7 @@
 package com.msc.inventairews.controller;
 
 import com.msc.inventairews.dao.StuffDAO;
+import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Stuff;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -9,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -21,27 +23,33 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class StuffController {
 
+    private StuffDAO sdao = new StuffDAO();
+    
     @GET
     public List<Stuff> getAllStuff() {
-        StuffDAO ldao = new StuffDAO();
-        return ldao.getAll();
+        return sdao.getAll();
+    }
+
+    @GET
+    @Path("{uuidBoite}")
+    public List<Stuff> getAllStuffByBoite(@PathParam("uuidBoite") String uuid) {
+        Boite b = new Boite();
+        b.setUuid(uuid);
+        return sdao.getStuffByBoite(b);
     }
 
     @PUT
     public Stuff insert(Stuff b) {
-        StuffDAO bdao = new StuffDAO();
-        return bdao.insert(b);
+        return sdao.insert(b);
     }
 
     @POST
     public Stuff update(Stuff b) {
-        StuffDAO bdao = new StuffDAO();
-        return bdao.update(b);
+        return sdao.update(b);
     }
 
     @DELETE
     public Stuff delete(Stuff b) {
-        StuffDAO bdao = new StuffDAO();
-        return bdao.delete(b);
+        return sdao.delete(b);
     }
 }

@@ -14,15 +14,28 @@ public class BoiteDAO extends AbstractDAO<Boite> {
         return getObject("from Boite where uuid='" + uuid + "'");
     }
 
-    public List<Boite> getAllBoites() {
+    public List<Boite> getAllRootBoites() {
         return getObjects("from Boite where rootBoite=true");
     }
 
+    public List<Boite> getAllBoitesByPiece(Piece piece) {
+        List<Boite> lb = getObjects("from Boite where piece.uuid='" + piece.getUuid() + "'");
+        for (Boite b : lb) {
+            clean(b);
+        }
+        return lb;
+    }
+
+    public Boite getParent(Boite child) {
+        return getObject("from Boite as b where element(b.boites).uuid = '" + child.getUuid() + "'");        
+    }
+
+   
     public List<Boite> getAllBoitesWithStuff(Piece piece) {
         return getObjects("from Boite JOIN FETCH stuffs where piece.uuid='" + piece.getUuid() + "'");
     }
 
-    public List<Boite> getAllBoitesByPiece(Piece piece) {
+    public List<Boite> getAllRootBoitesByPiece(Piece piece) {
         List<Boite> lb = getObjects("from Boite where piece.uuid='" + piece.getUuid() + "' and rootBoite=true");
         for (Boite b : lb) {
             clean(b);
@@ -53,7 +66,7 @@ public class BoiteDAO extends AbstractDAO<Boite> {
             super.delete(boite);
             return;
         }
-        for (Boite b : boite.getBoites()) {            
+        for (Boite b : boite.getBoites()) {
             deepDelete(b);
         }
         super.delete(boite);
