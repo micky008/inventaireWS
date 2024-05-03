@@ -50,6 +50,13 @@ public class InventaireWS {
         p.setNom("Grenier");
         p.setUuid(null);
         p = pdao.insert(p);
+        
+        Piece p2 = new Piece();
+        p2.setLieu(l2);
+        p2.setNom("Garage");
+        p2.setUuid(null);
+        pdao.insert(p2);
+        
         Boite b = new Boite();
         b.setNom("Ma 1ere boite");
         b.setPiece(p);

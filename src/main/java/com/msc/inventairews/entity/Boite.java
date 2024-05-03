@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import java.util.List;
+import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
 
 /**
@@ -102,4 +103,29 @@ public class Boite {
     public void setRootBoite(boolean rootBoite) {
         this.rootBoite = rootBoite;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.uuid);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Boite other = (Boite) obj;
+        return Objects.equals(this.uuid, other.uuid);
+    }
+    
+    
+    
 }

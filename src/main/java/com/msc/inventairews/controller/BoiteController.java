@@ -4,6 +4,7 @@ import com.msc.inventairews.dao.BoiteDAO;
 import com.msc.inventairews.dao.PieceDAO;
 import com.msc.inventairews.entity.Boite;
 import com.msc.inventairews.entity.Piece;
+import com.msc.inventairews.utility.BoiteUtils;
 import java.util.Iterator;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -74,16 +75,25 @@ public class BoiteController {
     }
 
     @POST
-    public Boite updatePiece(Boite b) {
+    public Boite updateBoitePieceAndNote(Boite b) {
         PieceDAO pdao = new PieceDAO();
 
         Boite oldBoite = bdao.get(b.getUuid());
         Piece newPiece = pdao.get(b.getPiece().getUuid());
 
+        if (!oldBoite.getPiece().equals(newPiece)) {
+            oldBoite.setRootBoite(true);
+            Boite parentBoite = bdao.getParent(oldBoite);
+            if (BoiteUtils.removeChildFromParent(parentBoite, oldBoite)) {
+                bdao.update(parentBoite);
+            }
+        }
+
         oldBoite.setNote(b.getNote());
         oldBoite.setPiece(newPiece);
+        bdao.update(oldBoite);
 
-        return bdao.update(oldBoite);
+        return b;
     }
 
     @POST
@@ -96,15 +106,7 @@ public class BoiteController {
             oldBoite.setRootBoite(false);
             bdao.update(oldBoite);
             Boite parentBoite = bdao.getParent(oldBoite);
-            if (parentBoite != null) {
-                Iterator<Boite> itb = parentBoite.getBoites().iterator();
-                while (itb.hasNext()) {
-                    Boite b = itb.next();
-                    if (b.getUuid().equals(oldBoite.getUuid())) {
-                        itb.remove();
-                        break;
-                    }
-                }
+            if (BoiteUtils.removeChildFromParent(parentBoite, oldBoite)) {
                 bdao.update(parentBoite);
             }
             newRootBoite.getBoites().add(oldBoite);

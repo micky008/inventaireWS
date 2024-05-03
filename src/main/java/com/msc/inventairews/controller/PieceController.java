@@ -42,13 +42,13 @@ public class PieceController {
     }
 
     @PUT
-    public Piece insert(Piece b) {
+    public Piece insert(Piece p) {
         PieceDAO bdao = new PieceDAO();
         LieuDAO ldao = new LieuDAO();
-        b.setUuid(null);
-        Lieu lieu = ldao.get(b.getLieu().getUuid());
-        b.setLieu(lieu);
-        return bdao.insert(b);
+        p.setUuid(null);
+        Lieu lieu = ldao.get(p.getLieu().getUuid());
+        p.setLieu(lieu);
+        return bdao.insert(p);
     }
 
     @POST

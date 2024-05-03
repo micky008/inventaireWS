@@ -3,7 +3,7 @@ package com.msc.inventairews.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
@@ -24,7 +24,7 @@ public class Piece {
 
     private String nom;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Lieu lieu;
 
     public String getUuid() {
@@ -57,7 +57,7 @@ public class Piece {
 
     public Piece() {
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -80,6 +80,4 @@ public class Piece {
         return Objects.equals(this.uuid, other.uuid);
     }
 
-    
-    
 }
